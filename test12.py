@@ -26,3 +26,6 @@ if __name__=="__main__":
     start = time.time()
     asyncio.run(main())
     print(time.time() - start)
+
+def test():
+    pass
