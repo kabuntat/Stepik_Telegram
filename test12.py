@@ -1,7 +1,18 @@
 import asyncio
 import time
 
+import aiohttp
+import requests as requests
 
+
+async def blocking():
+    resp = requests.get("https://ya.ru")
+    print(resp.status_code)
+
+async def async_http():
+    async with aiohttp.ClientSession() as session:
+        async with session.get("https://ya.ru") as resp:
+            print(resp.status)
 async def one():
     print("Start 1")
     await asyncio.sleep(1)
@@ -18,9 +29,7 @@ async def three():
     print("Stop 3")
 
 async def main():
-    asyncio.create_task(one())
-    asyncio.create_task(two())
-    await asyncio.create_task(three())
+    await asyncio.gather(*(async_http() for i in range(5)))
 
 if __name__=="__main__":
     start = time.time()
