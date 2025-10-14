@@ -1,17 +1,29 @@
-import asyncio
+from aiogram import Bot, Dispatcher
+from aiogram.filters import Command
+from aiogram.types import Message
 
-from aiogram import Dispatcher, types, Bot
+API_URL = 'https://api.telegram.org/bot'
+BOT_TOKEN = '8118742897:AAFJFwUMg6DfM6zlOmYVokhefoYg0lKe4H0'
 
+bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
+@dp.message(Command(commands="start"))
+async def process_start_command(message: Message):
+    await message.answer('Привет!\nМеня зовут Эхо-бот!\nНапиши мне что-нибудь')
+
+
+@dp.message(Command(commands="help"))
+async def process_help_command(message: Message):
+    await message.answer(
+        'Напиши мне что-нибудь и в ответ '
+        'я пришлю тебе твое сообщение'
+    )
+
 @dp.message()
+async def send_echo(message: Message):
+    await message.reply(text=message.text)
 
-async def hello(message: types.Message):
-    await message.send_copy(message.from_user.id)
-
-async def main():
-    bot = Bot(token='8118742897:AAFJFwUMg6DfM6zlOmYVokhefoYg0lKe4H0')
-    await dp.start_polling(bot)
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    dp.run_polling(bot)
